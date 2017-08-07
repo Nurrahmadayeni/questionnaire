@@ -1,0 +1,54 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "e91c22968c7b92cea72fef1eab2c5818",
+    "packages": [
+        {
+            "name": "parinpan/fan-jwt",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/parinpan/fan-jwt.git",
+                "reference": "40065336504dbc22c718011c90d5815bf9821069"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/parinpan/fan-jwt/zipball/40065336504dbc22c718011c90d5815bf9821069",
+                "reference": "40065336504dbc22c718011c90d5815bf9821069",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "parinpan\\fanjwt\\": "",
+                    "parinpan\\fanjwt\\libs\\": "libs/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "M. Fachrin Aulia Nasution",
+                    "email": "prn@samper.in"
+                }
+            ],
+            "description": "A really lightweight JWT library for private use",
+            "time": "2017-07-03T05:51:47+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "parinpan/fan-jwt": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

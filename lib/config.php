@@ -1,8 +1,8 @@
  <?php
 	$dbhost = 'localhost';
 	$dbuser = 'root';
-	$dbpass = '';
-	$dbname = 'survey_db';
+	$dbpass = 'passUSU2017';
+	$dbname = 'db_survey';
 
 	$mysqli = new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 

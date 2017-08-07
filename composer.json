@@ -1,0 +1,15 @@
+{
+    "name": "nurrahmadayeni/surveyusu",
+    "description": "Survey USU",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Nurrahmadayeni",
+            "email": "nurrahmadayeni.11@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "parinpan/fan-jwt": "dev-master"
+    }
+}
