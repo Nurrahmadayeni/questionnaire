@@ -166,8 +166,19 @@
         <div class="modal-body">Apakah anda yakin ingin keluar dari sistem ini?
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
-            <a href="mods/logout.php"><button type="button" class="btn btn-theme">Ya</button> </a>
+            <?php  
+                use parinpan\fanjwt\libs\JWTAuth;
+                $logoutLink = JWTAuth::makeLink([
+                    'baseUrl' => 'https://akun.usu.ac.id/auth/logout',
+                    'redir' => 'https://survey.usu.ac.id',
+                    'callback' => 'https://survey.usu.ac.id/callback.php',
+                ]);
+            ?>
+            
+            <form action="<?=$logoutLink?>" method="post">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                <button class="btn btn-theme">Ya</button>
+            </form>
         </div>
         </div>
     </div>

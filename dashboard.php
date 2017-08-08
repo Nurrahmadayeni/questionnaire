@@ -109,9 +109,7 @@
 <body <?php if(base64_decode($_GET['d'])!='dashboard_tampilan_home_pengguna'){ echo "class='page-sound page-header-fixed page-sidebar-fixed page-footer-fixed'"; } ?> >
     <section id="wrapper">
         <?php
-            var_dump($_SESSION);
             require_once('lib/config.php');
-            // require_once('lib/function.php');
             include('mods/frontend/modals.php');
         ?>
         <header id="header" class="page-header-fixed navbar-fixed-top">
@@ -144,6 +142,7 @@
                 </div>
             </nav>
         </header>
+
         <?php if(base64_decode($_GET['d'])!='dashboard_tampilan_home_pengguna'){ include ('mods/menu.php'); } ?>
         <?php $home=base64_decode($_GET['d']); ?>
         <section class="body-content animated fadeIn container-fluid text-middle" <?php 
@@ -152,11 +151,14 @@
             }
                 ?> style="padding-top:2%; ">
                 <?php
-                // var_dump($_SESSION);
+                
                     switch ($_SESSION['level']) {
                         case 'super':
                         case 'unit':
                         case 'fakultas': 
+                            if(!isset($_GET['d'])){
+                                include('mods/frontend/admin/home.php');
+                            }
                             switch (base64_decode($_GET['d'])) {
                                 case 'dashboard_tampilan_home_pengguna':
                                     include('mods/frontend/admin/home.php');
@@ -202,9 +204,6 @@
                                 break;
                                 case 'daftar_user_admin_superuser':
                                     include('mods/frontend/admin/listUser.php');
-                                break;
-                                default:
-                                    include('mods/frontend/error.php');
                                 break;
                             }  
                         break;
@@ -260,7 +259,6 @@
   });
     var d = new Date();
     var n = d.getFullYear();
-    // document.getElementById("username") = localStorage.getItem("username");
     document.getElementById('copyright').innerHTML=n;
 </script>
 

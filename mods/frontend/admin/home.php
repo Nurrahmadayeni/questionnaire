@@ -51,7 +51,7 @@
         <div class='col-md-2 col-sm-2'>
             <div id="panel" class="panel panel-theme panel-clickable text-center rounded" style="opacity:1;top:0px;">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Daftar User Admin</h3>
+                    <h3 class="panel-title">Daftar User</h3>
                 </div>
                 <div class="panel-body">
                     <div class="panel-body-ico">
