@@ -86,8 +86,8 @@
                 $_SESSION['level'] =  'dsn';
             }   
         }
+        require('dashboard.php');          	
 
-    	require('dashboard.php');    	
     } else {
         setcookie('ssotok', null, -1, '/');
         require('landing-page.php');

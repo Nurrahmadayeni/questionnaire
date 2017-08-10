@@ -6,9 +6,8 @@
         <tr class="text-center">
             <th class="text-center" width="5%">No</th>
             <th class="text-center">Judul Survey</th>
-            <th class='text-center'>Owner</th>
+            <th class='text-center'>Unit</th>
             <th class='text-center'>Dibuat oleh</th>
-            <th class='text-center'>Objective</th>
             <th class="text-center">Sampel</th>
             <th class="text-center">Jumlah Sampel</th>
             <th class="text-center" data-hide="phone,tablet">Jangka Waktu</th>
@@ -36,7 +35,6 @@
             
                 echo "<td>$row[id_owner]</td>";
                 echo "<td>$row[created_by]</td>";
-                echo "<td>$row[objective]</td>";
 
                 $sampel='';
 
@@ -109,11 +107,6 @@
         <tr class="text-center">
             <th class="text-center" width="5%">No</th>
             <th class="text-center">Judul Survey</th>
-            <?php 
-            	if($_SESSION['level']!="fakultas"){ 
-            		echo "<th class='text-center'>Objective</th>";
-            	}
-            ?>
             <th class='text-center'>Dibuat oleh</th>
             <th class="text-center">Sampel</th>
             <th class="text-center">Jumlah Sampel</th>
@@ -141,10 +134,6 @@
                 	$mt = '(Matakuliah)';
                 }
 
-            	if($_SESSION['level']=='unit'){ 
-
-                    echo "<td>$row[objective] $mt</td>";
-            	}
             	$sampel='';
                 echo "<td>".$row['created_by']."</td>";
                 if($row[mhs]=='1'){

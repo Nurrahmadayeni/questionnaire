@@ -1,6 +1,13 @@
 <?php
     $id_survey = base64_decode($_GET['srv']);
-    $query = "SELECT *from survey where id_survey='$id_survey' and dsn=1 and objective='$_SESSION[status]'";
+    $query="";
+    if($_SESSION['level']=='dsn'){
+        $query = "SELECT s.id_survey, s.id_owner, s.title, s.start_date, s.due_date from survey s, survey_objective so where so.objective='$_SESSION[status]' AND so.survey_id=s.id_survey AND s.dsn=1 ORDER BY s.due_date ASC";
+    }else if($_SESSION['level']=='pgw'){
+        $query = "SELECT s.id_survey, s.id_owner, s.title, s.start_date, s.due_date from survey s, survey_objective so where so.objective='$_SESSION[status]' AND so.survey_id=s.id_survey AND s.pgw=1 ORDER BY s.due_date ASC";
+    }else{
+        $query = "mahasiswa";
+    }
     $result = $mysqli->query($query);
     $cek = $result->num_rows;
     if($cek>0){
@@ -112,7 +119,7 @@
 <?php
 }else{
     echo"<script>
-            document.location.href='?d=error';
+            document.location.href='?d=$tampilan_error_pengguna_admin';
         </script>";
 }
 

@@ -2,11 +2,7 @@
 	$url = base64_decode($_GET['d']);
 	if($_GET['d']!='dashboard_tampilan_home_pengguna' && $_SESSION['level']=='unit' || $_SESSION['level']=='fakultas' || $_SESSION['level']=="super"){
 		?>
-		<!-- <aside style='position: fixed; width: 100%' >
-			<div class='row'>
-				<div class='col-sm-1'>kjhkhkkjhhjgjgjhjjhgjhjghjgjhghjgjjhgjhgjh</div>
-			</div>
-		</aside> -->
+
 		<div class="sidebar-nav-fixed affix" style='width: 16%; background-color: #2A2A2A; padding-bottom: 7%;height: 100%'>
             <aside id='sidebar-left' class='sidebar-circle'>
 			    <ul id='tour-9' class='sidebar-menu '>
@@ -61,5 +57,19 @@
         </div>
 		
     <?php
+	}if($_SESSION['level']=='pgw'|| $_SESSION['level']=='dsn' || $_SESSION['level']=='mhs'){ ?>
+		<div class="sidebar-nav-fixed affix" style='width: 16%; background-color: #2A2A2A; padding-bottom: 7%;height: 100%'>
+            <aside id='sidebar-left' class='sidebar-circle'>
+			    <ul id='tour-9' class='sidebar-menu '>
+			    	<li class='submenu' style='padding-top: 5%; padding-bottom: 3%; background-color: black;color:white;'>
+			    		<a href="?d=<?=base64_encode("dashboard_tampilan_home_pengguna")?>">
+                            <span class="icon"><i class="fa fa-list"></i></span>
+	                        <span>Daftar Survey</span>
+	                    </a>
+                    </li>
+		        </ul>
+		    </aside>
+        </div>
+	<?php
 	}
 	?>

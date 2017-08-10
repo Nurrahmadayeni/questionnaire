@@ -106,6 +106,7 @@
 	                    <?php
 	                        $no=1;
 	                        $query = "SELECT q.id_q, q.question, q.id_style_ans, q. id_survey, q.answer_value, s.style_ans from question q, style_ans s where q.id_style_ans=s.id_style_ans and q.id_survey='$id_survey' order by q.id_q";
+                            
 	                        $result = $mysqli->query($query);
 
 	                        while ($row = $result->fetch_assoc()) {

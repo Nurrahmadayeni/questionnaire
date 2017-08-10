@@ -15,7 +15,7 @@
         <link href="assets/plugins/fontawesome/css/font-awesome.min.css" rel="stylesheet">
         
         <link href="assets/plugins/animate.css/animate.min.css" rel="stylesheet">
-
+        
         <!-- DatePicker -->
         <link href="assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
         <link href="assets/plugins/bootstrap-datepicker-vitalets/css/datepicker.css" rel="stylesheet">
@@ -47,7 +47,7 @@
                 cursor: pointer;
             }
             #alert,#alert2{
-                border: 1px solid;
+                border: 0px solid;
                 border-radius: 4px;  
                 position: relative !important; 
                 display:none; 
@@ -55,6 +55,15 @@
                 margin-bottom: -10px; 
                 margin-top: -60px;
             }  
+            #response_add{
+                border: 0 solid;
+                position: static !important; 
+                display:none; 
+                z-index: 9999; 
+                text-align: center;
+                margin: auto;
+                width: 50%;
+            }
             hr.style { 
               height: 30px; 
               border-style: solid; 
@@ -106,11 +115,12 @@
             }
         </style>
     </head>
-<body <?php if(base64_decode($_GET['d'])!='dashboard_tampilan_home_pengguna'){ echo "class='page-sound page-header-fixed page-sidebar-fixed page-footer-fixed'"; } ?> >
+<body class='page-sound page-header-fixed page-sidebar-fixed page-footer-fixed'>
     <section id="wrapper">
         <?php
             require_once('lib/config.php');
             include('mods/frontend/modals.php');
+            $tampilan_error_pengguna_admin = base64_encode('tampilan_error_pengguna_admin');
         ?>
         <header id="header" class="page-header-fixed navbar-fixed-top">
             <nav class="navbar navbar-toolbar navbar-fixed-top" style='background-color: #81B71A;'>
@@ -143,13 +153,8 @@
             </nav>
         </header>
 
-        <?php if(base64_decode($_GET['d'])!='dashboard_tampilan_home_pengguna'){ include ('mods/menu.php'); } ?>
-        <?php $home=base64_decode($_GET['d']); ?>
-        <section class="body-content animated fadeIn container-fluid text-middle" <?php 
-            if($home!='dashboard_tampilan_home_pengguna' && $home!='tampilan_question_pengguna' ){
-                echo "id='page-content'";
-            }
-                ?> style="padding-top:2%; ">
+        <?php include ('mods/menu.php');  ?>
+        <section class="body-content animated fadeIn container-fluid text-middle" id='page-content' style="padding-top:2%; ">
                 <?php
                 
                     switch ($_SESSION['level']) {
@@ -209,6 +214,9 @@
                         break;
                         case 'dsn':
                         case 'pgw':
+                            if(!isset($_GET['d'])){
+                                include('mods/frontend/users/home.php');
+                            }
                             switch (base64_decode($_GET['d'])) {
                                 case 'dashboard_tampilan_home_pengguna':
                                     include('mods/frontend/users/home.php');
@@ -216,15 +224,15 @@
                                 case 'tampilan_question_pengguna':
                                     include('mods/frontend/users/question.php');
                                     break;
-                                case 'tampilan_error_dosen':
+                                case 'tampilan_error_pengguna_admin':
                                     include('mods/frontend/error.php');
                                     break;
-                                default:
-                                    include('mods/frontend/error.php');
-                                break;
                             }  
                         break;
                         case 'mhs':
+                            if(!isset($_GET['d'])){
+                                include('mods/frontend/users/home.php');
+                            }
                             switch (base64_decode($_GET['d'])) {
                                 case 'dashboard_tampilan_home_pengguna':
                                     include('mods/frontend/mhs/home.php');
@@ -232,12 +240,9 @@
                                 case 'tampilan_question_mahasiswa':
                                     include('mods/frontend/mhs/question.php');
                                 break;
-                                case 'tampilan_error_mahasiswa':
+                                case 'tampilan_error_pengguna_admin':
                                     include('mods/frontend/error.php');
                                     break;
-                                default:
-                                    include('mods/frontend/error.php');
-                                break;
                             }  
                         break;
                         default:

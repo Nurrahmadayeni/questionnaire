@@ -23,8 +23,8 @@
 	                    	// var_dump($_SESSION);
 	                        $no=1;
 
-                        	$query = "SELECT *from survey where objective='$_SESSION[status]' AND pgw=1 ORDER BY due_date ASC";
-	                      
+                        	$query = "SELECT s.id_survey, s.id_owner, s.title, s.start_date, s.due_date from survey s, survey_objective so where so.objective='$_SESSION[status]' AND so.survey_id=s.id_survey AND s.pgw=1 ORDER BY s.due_date ASC";
+                        
 	                        $result = $mysqli->query($query);
 
 	                        while ($row = $result->fetch_assoc()) {

@@ -255,29 +255,17 @@
 
 		if($level=='unit' || $level=='super'){
 			// tiap unit
-			foreach ($unit as $key => $value) {
-				if($mat_kul=='1'){
-					$qu = "SELECT thn_ajaran, semester FROM survey where thn_ajaran='$p[thn_ajaran]' and semester='$p[semester]' and id_owner='$id_owner' and objective='$value'";
-					$cek = $mysqli->query($qu);
-					$cek2 = $cek->num_rows;
-					// echo "cek ". $cek2;
+			if($mat_kul=='1'){
+				$qu = "SELECT thn_ajaran, semester FROM survey where thn_ajaran='$p[thn_ajaran]' and semester='$p[semester]' and id_owner='$id_owner'";
+				$cek = $mysqli->query($qu);
+				$cek2 = $cek->num_rows;
+				// echo "cek ". $cek2;
 
-					if($cek2>0){
-						$nama_unit = $mysqli->query("SELECT nama_unit FROM unit_kerja where id_unit='$value'")->fetch_object()->nama_unit;
-						echo "Survey matakuliah di $nama_unit pada semester ini sudah ada <br/>";
-					}else{
-						$q_insert = "INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) VALUES('$id_owner', '$username', '$value', '1' ,'$title', '$start_date', '$due_date','1', '$p[thn_ajaran]', '$p[semester]')";
-						// echo $q_insert;
-						$insert = $mysqli->query($q_insert);
-						if($insert){
-							$res = "Survey Berhasil Ditambah";
-						}else{
-							$res = "Gagal, Silahkan cek kembali data yang diinput";
-						}
-					}
+				if($cek2>0){
+					$nama_unit = $mysqli->query("SELECT nama_unit FROM unit_kerja where id_unit='$value'")->fetch_object()->nama_unit;
+					echo "Survey matakuliah di $nama_unit pada semester ini sudah ada <br/>";
 				}else{
-					$q_insert = "INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date) 
-						VALUES('$id_owner', '$username', '$value', '0' ,'$title', '$start_date', '$due_date')";
+					$q_insert = "INSERT INTO survey (id_owner, created_by, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) VALUES('$id_owner', '$username', '1' ,'$title', '$start_date', '$due_date','1', '$p[thn_ajaran]', '$p[semester]')";
 					// echo $q_insert;
 					$insert = $mysqli->query($q_insert);
 					if($insert){
@@ -286,12 +274,35 @@
 						$res = "Gagal, Silahkan cek kembali data yang diinput";
 					}
 				}
-				
-				$max = $mysqli->query("SELECT max(id_survey) as max FROM survey")->fetch_object()->max;
-				foreach ($_POST['sampel'] as $key => $value) {
-					$mysqli->query("UPDATE survey set $value=1 WHERE id_survey ='$max'");
+			}else{
+				$q_insert = "INSERT INTO survey (id_owner, created_by, matakuliah, title, start_date, due_date) 
+					VALUES('$id_owner', '$username', '0' ,'$title', '$start_date', '$due_date')";
+				// echo $q_insert;
+				$insert = $mysqli->query($q_insert);
+				if($insert){
+					$res = "Survey Berhasil Ditambah";
+				}else{
+					$res = "Gagal, Silahkan cek kembali data yang diinput";
 				}
 			}
+			
+			$max = $mysqli->query("SELECT max(id_survey) as max FROM survey")->fetch_object()->max;
+			foreach ($_POST['sampel'] as $key => $value) {
+				$mysqli->query("UPDATE survey set $value=1 WHERE id_survey ='$max'");
+			}
+
+			foreach ($unit as $key => $value) {
+				$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
+					VALUES($max, '$value')";
+				// echo $q_insert;
+				$insert = $mysqli->query($q_insert);
+				if($insert){
+					$res = "Survey Berhasil Ditambah";
+				}else{
+					$res = "Gagal, Silahkan cek kembali data yang diinput";
+				}
+			}
+			
 			echo $res;
 		}elseif($level=='fakultas'){
 			if($mat_kul=='1'){
@@ -303,8 +314,8 @@
 				if($cek2>0){
 					echo "Survey matakuliah pada semester ini sudah ada";
 				}else{
-					$q_insert = "INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) 
-					VALUES('$id_owner', '$username', '$id_owner', '1' ,'$title', '$start_date', '$due_date', '1', '$p[thn_ajaran]', '$p[semester]')";
+					$q_insert = "INSERT INTO survey (id_owner, created_by, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) 
+					VALUES('$id_owner', '$username', '1' ,'$title', '$start_date', '$due_date', '1', '$p[thn_ajaran]', '$p[semester]')";
 					$insert = $mysqli->query($q_insert);
 
 					if($insert){
@@ -314,17 +325,30 @@
 					}
 				}
 			}else{
-				$insert = $mysqli->query("INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date) 
-						VALUES('$id_owner', '$username', '$id_owner', '0' ,'$title', '$start_date', '$due_date')");
+				$insert = $mysqli->query("INSERT INTO survey (id_owner, created_by, matakuliah, title, start_date, due_date) 
+						VALUES('$id_owner', '$username', '0' ,'$title', '$start_date', '$due_date')");
+
 				if($insert){
 					$res = "Survey Berhasil Ditambah";
 				}else{
 					$res = "Gagal, Silahkan cek kembali data yang diinput";
 				}
 			}
+
 			$max = $mysqli->query("SELECT max(id_survey) as max FROM survey")->fetch_object()->max;
+
 			foreach ($_POST['sampel'] as $key => $value) {
 				$mysqli->query("UPDATE survey set $value=1 WHERE id_survey ='$max'");
+			}
+
+			$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
+					VALUES($max, '$id_owner')";
+			// echo $q_insert;
+			$insert = $mysqli->query($q_insert);
+			if($insert){
+				$res = "Survey Berhasil Ditambah";
+			}else{
+				$res = "Gagal, Silahkan cek kembali data yang diinput";
 			}
 			echo $res;
 		}
@@ -711,61 +735,9 @@
         $res='';
 		if($level=='unit' || $level=='super'){
 			// tiap unit
-			foreach ($unit as $key => $value) {
-
-				if($mat_kul=='1'){
-					$q_insert = "INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) VALUES('$id_owner', '$_SESSION[username_q]', '$value', '1' ,'$title', '$start_date', '$due_date','1', '$p[thn_ajaran]', '$p[semester]')";
-					// echo $q_insert;
-					$insert = $mysqli->query($q_insert);
-					if($insert){
-						$res = "sukses";
-					}else{
-						$res = "gagal";
-					}
-				}else{
-					$q_insert = "INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date) 
-						VALUES('$id_owner', '$_SESSION[username_q]','$value', '0' ,'$title', '$start_date', '$due_date')";
-					// echo $q_insert;
-					$insert = $mysqli->query($q_insert);
-					
-					if($insert){
-						$res = "sukses";
-					}else{
-						$res = "gagal";
-					}
-
-					$max = $mysqli->query("SELECT max(id_survey) as max FROM survey where created_by='$_SESSION[username_q]'")->fetch_object()->max;
-
-					foreach ($_POST['sampel'] as $key1 => $value1) {
-						$mysqli->query("UPDATE survey set $value1=1 WHERE id_survey ='$max'");
-					}
-				}
-				$max = $mysqli->query("SELECT max(id_survey) as max FROM survey where created_by='$_SESSION[username_q]'")->fetch_object()->max;
-				if($res='sukses'){
-					$result='';
-					$q = "SELECT *from question where id_survey='$_POST[id_survey]'";
-			        $r_n = $mysqli->query($q);
-
-			        while($qst = $r_n->fetch_assoc()){
-			        	$insert_q = "INSERT INTO question (id_survey, question, id_style_ans, answer_value)
-											VALUES('$max','$qst[question]' ,'$qst[id_style_ans]', '$qst[answer_value]')";
-			        	$insert_qst = $mysqli->query($insert_q);
-			        	if($insert_qst){
-			        		$result='Pertanyaan berhasil disalin ke survey baru';
-			        	}else{
-			        		$result='Gagal salin survey, silahkan cek kembali';
-			        	}
-			        }
-			        echo $result;
-				}else{
-					echo "Gagal salin survey, silahkan cek kembali";
-				}
-			}
-		}elseif($level=='fakultas'){
-
 
 			if($mat_kul=='1'){
-				$q_insert = "INSERT INTO survey (id_owner, created_by, objective, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) VALUES('$id_owner', '$_SESSION[username_q]', '$id_owner', '1' ,'$title', '$start_date', '$due_date','1', '$p[thn_ajaran]', '$p[semester]')";
+				$q_insert = "INSERT INTO survey (id_owner, created_by, matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) VALUES('$id_owner', '$_SESSION[username_q]', '1' ,'$title', '$start_date', '$due_date','1', '$p[thn_ajaran]', '$p[semester]')";
 				// echo $q_insert;
 				$insert = $mysqli->query($q_insert);
 				if($insert){
@@ -774,8 +746,73 @@
 					$res = "gagal";
 				}
 			}else{
-				$q_insert = "INSERT INTO survey (id_owner, objective, matakuliah, title, start_date, due_date) 
-					VALUES('$id_owner', '$id_owner', '0' ,'$title', '$start_date', '$due_date'";
+				$q_insert = "INSERT INTO survey (id_owner, created_by, matakuliah, title, start_date, due_date) 
+					VALUES('$id_owner', '$_SESSION[username_q]','0' ,'$title', '$start_date', '$due_date')";
+				// echo $q_insert;
+				$insert = $mysqli->query($q_insert);
+				
+				if($insert){
+					$res = "sukses";
+				}else{
+					$res = "gagal";
+				}
+
+				$max = $mysqli->query("SELECT max(id_survey) as max FROM survey where created_by='$_SESSION[username_q]'")->fetch_object()->max;
+
+				foreach ($_POST['sampel'] as $key1 => $value1) {
+					$mysqli->query("UPDATE survey set $value1=1 WHERE id_survey ='$max'");
+				}
+
+				foreach ($unit as $key => $value) {
+					$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
+						VALUES($max, '$value')";
+					
+					$insert = $mysqli->query($q_insert);
+					if($insert){
+						$res = "Survey Berhasil Ditambah";
+					}else{
+						$res = "Gagal, Silahkan cek kembali data yang diinput";
+					}
+				}
+			}
+
+			$max = $mysqli->query("SELECT max(id_survey) as max FROM survey where created_by='$_SESSION[username_q]'")->fetch_object()->max;
+
+			if($res='sukses'){
+				$result='';
+
+				$q = "SELECT *from question where id_survey='$_POST[id_survey]'";
+		        $r_n = $mysqli->query($q);
+
+		        while($qst = $r_n->fetch_assoc()){
+		        	$insert_q = "INSERT INTO question (id_survey, question, id_style_ans, answer_value)
+										VALUES('$max','$qst[question]' ,'$qst[id_style_ans]', '$qst[answer_value]')";
+		        	$insert_qst = $mysqli->query($insert_q);
+		        	if($insert_qst){
+		        		$result='Pertanyaan berhasil disalin ke survey baru';
+		        	}else{
+		        		$result='Gagal salin survey, silahkan cek kembali';
+		        	}
+		        }
+		        echo $result;
+			}else{
+				echo "Gagal salin survey, silahkan cek kembali";
+			}
+
+		}elseif($level=='fakultas'){
+
+			if($mat_kul=='1'){
+				$q_insert = "INSERT INTO survey (id_owner, created_by,matakuliah, title, start_date, due_date, mhs, thn_ajaran, semester) VALUES('$id_owner', '$_SESSION[username_q]', '1' ,'$title', '$start_date', '$due_date','1', '$p[thn_ajaran]', '$p[semester]')";
+				// echo $q_insert;
+				$insert = $mysqli->query($q_insert);
+				if($insert){
+					$res = "sukses";
+				}else{
+					$res = "gagal";
+				}
+			}else{
+				$q_insert = "INSERT INTO survey (id_owner, matakuliah, title, start_date, due_date) 
+					VALUES('$id_owner','0' ,'$title', '$start_date', '$due_date'";
 				$insert = $mysqli->query($q_insert);
 				
 				if($insert){
@@ -788,7 +825,19 @@
 				foreach ($_POST['sampel'] as $key => $value) {
 					$mysqli->query("UPDATE survey set $value=1 WHERE id_survey ='$max'");
 				}
+
+				$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
+					VALUES($max, '$id_owner')";
+				
+				$insert = $mysqli->query($q_insert);
+
+				if($insert){
+					$res = "Survey Berhasil Ditambah";
+				}else{
+					$res = "Gagal, Silahkan cek kembali data yang diinput";
+				}
 			}
+
 			if($res='sukses'){
 				$max = $mysqli->query("SELECT max(id_survey) as max FROM survey where created_by='$_SESSION[username_q]'")->fetch_object()->max;
 				

@@ -1,6 +1,5 @@
 <?php
     $id_survey = base64_decode($_GET['srv']);
-    // echo $id_survey;
 
     $level = $_SESSION['level'];
     if($level=="fakultas" || $level=="unit" || $level=="super" ){
@@ -17,10 +16,11 @@
         <hr class="title">
     </div>
 </div>
+<div class="clearfix"></div>
+<div id='response_add' class='col-md-4 col-md-offset-4'></div>
 <div class="row">
     <div class="col-md-12">
         <div class="panel rounded shadow panel-default">
-            <div id='response_add'></div>
             <div class="panel-body">
                 <?php
                     $query = "SELECT *from survey where id_survey='$id_survey'";

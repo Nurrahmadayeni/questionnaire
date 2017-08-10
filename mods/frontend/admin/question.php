@@ -1,6 +1,7 @@
 <?php
     $id_survey = base64_decode($_GET['srv']);
-    $query = "SELECT *from survey where id_survey='$id_survey' and pgw=1 and objective='$_SESSION[status]'";
+    $query = "SELECT s.id_survey, s.id_owner, s.title, s.start_date, s.due_date from survey s, survey_objective so where so.objective='$_SESSION[status]' AND so.survey_id=s.id_survey AND s.pgw=1 AND s.id_survey='$id_survey' ORDER BY s.due_date ASC";
+
     $result = $mysqli->query($query);
     $cek = $result->num_rows;
     if($cek>0){
