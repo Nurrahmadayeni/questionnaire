@@ -189,6 +189,9 @@
                                 case 'list_question_pengguna_admin':
                                     include('mods/frontend/admin/listQst.php');
                                     break;
+                                case 'list_question_obj_pengguna_admin':
+                                    include('mods/frontend/admin/listQstObj.php');
+                                    break;
                                 case 'edit_question_pengguna_admin':
                                     include('mods/frontend/admin/editQst.php');
                                 break;

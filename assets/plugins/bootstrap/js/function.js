@@ -66,9 +66,9 @@ $(document).ready(function () {
             type:'POST',
             data:$('#form_question').serialize(),
             success:function(result){
+                $('html, body').animate({ scrollTop: 0 }, 300);
                 $("#submit_answer").val('Submit');  
                 $("#alert").fadeIn('slow').html(result);
-                $('html, body').animate({ scrollTop: 0 }, 700);
                 $( "#alert" ).delay( 500 ).fadeOut( 8000 );
 
                 // console.log(result);
@@ -99,8 +99,8 @@ $(document).ready(function () {
             data:$('#form_addSurvey').serialize(),
             success:function(result){
                 $("#submit").val('Submit');  
+                $('html, body').animate({ scrollTop: 0 }, 300);
                 $("#alert").html(result).fadeIn('slow');
-                $('html, body').animate({ scrollTop: 0 }, 700);
                 $( "#alert" ).delay( 500 ).fadeOut( 100 );
 
                 console.log(result);
@@ -143,9 +143,9 @@ $(document).ready(function () {
             data:$('#form_copySurvey').serialize(),
             success:function(result){
                 $("#submit").val('Submit');  
+                $('html, body').animate({ scrollTop: 0 }, 300);
                 $("#alert").fadeIn('slow').html(result);
-                $('html, body').animate({ scrollTop: 0 }, 700);
-                // $( "#alert" ).delay( 500 ).fadeOut( 1000 );
+                $( "#alert" ).delay( 500 ).fadeOut( 1000 );
                 
                 console.log(result);
 
@@ -190,7 +190,7 @@ $(document).ready(function () {
                 data:$('#form_addQst').serialize(),
                 success:function(result){
                     $("#save_add").val('Simpan dan Tambah');
-                    $('html, body').animate({ scrollTop: 0 }, 700);
+                    $('html, body').animate({ scrollTop: 0 }, 300);
                     // $("#response_add").html(result).fadeIn('slow');
                     // $("#response_add").fadeOut(1500);
                     $('#form_addQst').trigger("reset");
@@ -225,8 +225,8 @@ $(document).ready(function () {
                 data:$('#form_addQst').serialize(),
                 success:function(result){
                     $("#save_list").val('Simpan dan Lihat Daftar');
+                    $('html, body').animate({ scrollTop: 0 }, 300);
                     $("#response_add").fadeIn('slow').html(result);
-                    $('html, body').animate({ scrollTop: 0 }, 700);
                     $("#response_add").fadeOut('slow').delay('1500');
                     $('#form_addQst').trigger("reset").fadeOut('slow');
 
@@ -535,7 +535,20 @@ $(document).ready(function () {
         );
     });
 
-    // EditQst
+     // show obj
+    $(document).on('click','.showObj',function(e){
+        e.preventDefault();
+        $("#showObj").modal('show');
+        $.post('mods/backend/act.php?act=showObj',
+            {srv:$(this).attr('data-id')},
+            function(html){
+                $(".modal-body").html(html);
+            }   
+        );
+    });
+
+
+    // edit user
     $(document).on('click','.editUser',function(e){
         e.preventDefault();
         $("#editUser").modal('show');
@@ -632,8 +645,9 @@ $(document).ready(function () {
     $(document).on('click','.diagram',function(e){
         e.preventDefault();
         $("#diagram").modal('show');
+
         $.post('mods/frontend/admin/diagram.php',
-            {srv:$(this).attr('data-id'),qst:$(this).attr('data-id2')},
+            {srv:$(this).attr('data-id'), qst:$(this).attr('data-id2'), obj:$(this).attr('data-id3')},
             function(html){
                 $(".modal-body").html(html);
             }   
@@ -684,8 +698,8 @@ $(document).ready(function () {
                 type:'POST',
                 data:$('#form_report_srv').serialize(),
                 success:function(result){
+                    $('html, body').animate({ scrollTop: 0 }, 300);
                     $("#alert").fadeIn('slow').html(result);
-                    $('html, body').animate({ scrollTop: 0 }, 700);
                 }
             });
         }
@@ -703,12 +717,23 @@ $(document).ready(function () {
                 type:'POST',
                 data:$('#form_report_srv').serialize(),
                 success:function(result){
+                    $('html, body').animate({ scrollTop: 0 }, 300);
                     $("#alert").fadeIn('slow').html(result);
-                    $('html, body').animate({ scrollTop: 0 }, 700);
                 }
             });
         }
         // alert('click');
     });
+
+    $(".selectall").click(function(){
+        $('#unit option').prop('selected', true);
+        $('#unit').trigger('change');
+    });
+
+    $(".deselectall").click(function(){
+        $("#unit option").removeAttr("selected");
+        $('#unit').val('').trigger("change");
+    });
+
 
 });

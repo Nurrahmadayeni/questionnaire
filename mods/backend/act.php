@@ -119,6 +119,7 @@
 		$id_q = $_POST['id_q'];
 		$id_style_ans = $_POST['id_style_ans'];
 		$level = $_SESSION['level'];
+		$unit = $_SESSION['status'] ;
 
 		// echo "seluruh". print_r($_POST). "<br/><br/>";
 		// echo "chosen ".var_dump($_POST['chosen'])."<br/>";
@@ -144,15 +145,15 @@
 						$i++;
 				    }
 				    // echo $val_chosen;
-				    $insert = "INSERT INTO quest_user (username, level, id_survey, id_q, id_style_ans, id_matkul, answer) 
-				 				 VALUES('$username', '$level', '$id_srv','$value','$id_style','$id_matkul','$val_chosen')";
+				    $insert = "INSERT INTO quest_user (username, level, unit, id_survey, id_q, id_style_ans, id_matkul, answer) 
+				 				 VALUES('$username', '$level', '$unit', '$id_srv','$value','$id_style','$id_matkul','$val_chosen')";
 				 	// echo $insert;
 					$cek = $mysqli->query($insert);	
 
 				}else{
 					$answer = $_POST['answer'][$value];
-					$insert = "INSERT INTO quest_user (username, level, id_survey, id_q, id_style_ans, id_matkul, answer) 
-				 				 VALUES('$username', '$level', '$id_srv','$value','$id_style','$id_matkul','$answer')";
+					$insert = "INSERT INTO quest_user (username, level, unit, id_survey, id_q, id_style_ans, id_matkul, answer) 
+				 				 VALUES('$username', '$level', '$unit', '$id_srv','$value','$id_style','$id_matkul','$answer')";
 				 	$cek = $mysqli->query($insert);
 					// echo " Jawabn ". $_POST['answer'][$value]. "<br/>";
 				}
@@ -181,14 +182,14 @@
 						}
 						$i++;
 				    }
-				   	$insert_q = "INSERT INTO quest_user (username, level, id_survey, id_q, id_style_ans, id_matkul, answer) 
-				 				 VALUES('$username', '$level', '$id_srv','$value','$id_style','$id_matkul','$val_chosen')";
+				   	$insert_q = "INSERT INTO quest_user (username, level,unit, id_survey, id_q, id_style_ans, id_matkul, answer) 
+				 				 VALUES('$username', '$level','$unit', '$id_srv','$value','$id_style','$id_matkul','$val_chosen')";
 				 	// echo " style2 ". $insert."<br/>";
 					$insert = $mysqli->query($insert_q);	
 				}else{
 					$answer = $_POST['answer'][$value];
-					$insert_q = "INSERT INTO quest_user (username, level, id_survey, id_q, id_style_ans, id_matkul, answer) 
-				 				 VALUES('$username','$level', '$id_srv','$value','$id_style','$id_matkul','$answer')";
+					$insert_q = "INSERT INTO quest_user (username, level, unit, id_survey, id_q, id_style_ans, id_matkul, answer) 
+				 				 VALUES('$username','$level','$unit', '$id_srv','$value','$id_style','$id_matkul','$answer')";
 				 	// echo $insert."<br/>";
 				 	$insert = $mysqli->query($insert_q);
 					// echo " Jawabn ". $_POST['answer'][$value]. "<br/>";
@@ -227,7 +228,8 @@
 		$id_owner = '';
 		$level = $_SESSION['level'];
 		if($level=='super'){
-			$id_owner = $_POST['id_owner'];
+			$obj = explode('-', $_POST['id_owner']);
+			$id_owner = $obj[0];
 		}else{
 			$id_owner = $_SESSION['status'];
 		}
@@ -292,9 +294,11 @@
 			}
 
 			foreach ($unit as $key => $value) {
-				$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
-					VALUES($max, '$value')";
-				// echo $q_insert;
+				$obj = explode('-', $value);
+
+				$q_insert = "INSERT INTO survey_objective (survey_id, objective, nama_objective) 
+					VALUES($max, '$obj[0]', '$obj[1]')";
+				
 				$insert = $mysqli->query($q_insert);
 				if($insert){
 					$res = "Survey Berhasil Ditambah";
@@ -340,6 +344,7 @@
 			foreach ($_POST['sampel'] as $key => $value) {
 				$mysqli->query("UPDATE survey set $value=1 WHERE id_survey ='$max'");
 			}
+
 
 			$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
 					VALUES($max, '$id_owner')";
@@ -617,7 +622,42 @@
 		  	</div>
 		</form>
 		";
-	}elseif($act=='editUser'){
+	}elseif($act=='showObj'){
+		$id_survey = $_POST['srv'];
+
+		$query = "SELECT *FROM survey_objective where survey_id='$id_survey'";
+
+		$data = $mysqli->query($query);
+
+		echo "
+		<form method='post' action='mods/backend/act.php?act=showObjAction'>			
+			<input type='hidden' name='srv' class='form-control' value='$id_survey'>
+
+			<select class='form-control select2' name='obj'>
+			";
+			while($obj = $data->fetch_assoc()){
+				echo "<option value='$obj[objective]'>$obj[nama_objective]</option>";
+			}
+		echo "
+			</select>
+
+			<div class='modal-footer'>
+				<input type='submit' value='Lihat Pertanyaan' class='btn btn-theme'>
+				<button class='btn btn-danger' data-dismiss='modal'>Cancel</button>
+		  	</div>
+		</form>
+		";
+		
+	}elseif($act=='showObjAction'){
+		$list_quest = base64_encode("list_question_obj_pengguna_admin");
+		$srvey = base64_encode($_POST['srv']);
+		$obj = $_POST['obj'];
+		echo "<script type='text/javascript'>
+				document.location.href='../../?d=$list_quest&srv=$srvey&obj=$obj';
+			</script>";
+		
+	}
+	elseif($act=='editUser'){
 		$id = $_POST['id'];
 
 		$query = "SELECT *FROM users_auth where id='$id'";
@@ -713,7 +753,8 @@
 		$level = $_SESSION['level'];
 
 		if($level=='super'){
-			$id_owner = $_POST['id_owner'];
+			$owner = explode('-', $_POST['id_owner']);
+			$id_owner = $owner[0];
 		}else{
 			$id_owner = $_SESSION['status'];
 		}
@@ -764,8 +805,10 @@
 				}
 
 				foreach ($unit as $key => $value) {
-					$q_insert = "INSERT INTO survey_objective (survey_id, objective) 
-						VALUES($max, '$value')";
+					$obj = explode('-', $value);
+
+					$q_insert = "INSERT INTO survey_objective (survey_id, objective, nama_objective) 
+						VALUES($max, '$obj[0]', '$obj[1]')";
 					
 					$insert = $mysqli->query($q_insert);
 					if($insert){

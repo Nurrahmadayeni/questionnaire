@@ -81,7 +81,7 @@
                     <div class='col-md-3'>
                         <div class='mini-stat-type-4 bg-theme shadow'>
                             <h3>Judul Survey</h3>
-                            <h5 style='text-align:justify;'>\" PEMBELAJARAN DENGAN MENGINTEGRASIKAN NILAI-NILAI KEIMANAN DAN KETAQWAAN (IMTAQ) DALAM MATA PELAJARAN IPA BAGI SISWA SEKOLAH DASAR Penelitian Naturalistik pada Sekolah Dasar Assalam II Bandung  \"</h5>
+                            <h5 style='text-align:justify;'>\" $jdl  \"</h5>
                         </div>
                     </div>
                     <div class='col-md-3'>

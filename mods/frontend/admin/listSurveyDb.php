@@ -64,8 +64,9 @@
                 echo "<td>".$row['start_date']. " s/d ".$row['due_date']. "</td>";              
                 echo "
                     <td class='text-center' data-hide='phone,tablet'>
-                    <a href='?d=$list_quest&srv=$srvey' title='Lihat Pertanyaan' data-toggle='tooltip' data-placement='top' class='btn btn-primary btn-xs '><i class='fa fa-eye'></i></a>";
+                        <a href='#showObj' class='showObj btn btn-primary btn-xs' title='Lihat Pertanyaan' data-id='$row[id_survey]' data-toggle='tooltip' data-placement='top'><i class='fa fa-eye'></i></a>";
                     
+                
                     $c = $mysqli->query("SELECT username FROM quest_user WHERE id_survey = $row[id_survey]")->fetch_object()->username;
 
                     $enable="";
@@ -118,12 +119,14 @@
         <?php
         // var_dump($_SESSION);
             $no=1;
-            $query = "SELECT *from survey where id_owner='$_SESSION[status]' ORDER BY due_date DESC";
+            $query = "SELECT s.title, s.id_survey, s.start_date, s.due_date, s.mhs, s.dsn, s.pgw, so.objective from survey s, survey_objective so where s.id_owner='$_SESSION[status]' and s.id_survey=so.survey_id GROUP BY s.id_survey ORDER BY s.due_date DESC ";
+            // echo $query;
             $result = $mysqli->query($query);
 
             while ($row = $result->fetch_assoc()) {
             	$list_quest = base64_encode("list_question_pengguna_admin");
              	$srvey = base64_encode($row['id_survey']);
+                $obj = $row['objective'];
 
                 echo "<tr>";
                 echo "<td class='text-center' data-hide='phone'>".$no."</td>";
@@ -161,8 +164,14 @@
                
                 echo "<td>".$row['start_date']. " s/d ".$row['due_date']. "</td>";             	
                 echo "
-                    <td class='text-center' data-hide='phone,tablet'>
-                    <a href='?d=$list_quest&srv=$srvey' title='Lihat Pertanyaan' data-toggle='tooltip' data-placement='top' class='btn btn-primary btn-xs '><i class='fa fa-eye'></i></a>";
+                    <td class='text-center' data-hide='phone,tablet'>";
+
+                    if($_SESSION['level']=='fakultas'){
+                        echo "<a href='?d=$list_quest&srv=$srvey&obj=$obj' title='Lihat Pertanyaan' data-toggle='tooltip' data-placement='top' class='btn btn-primary btn-xs '><i class='fa fa-eye'></i></a>";
+                    }else{
+                        echo "
+                        <a href='#showObj' class='showObj btn btn-primary btn-xs' title='Lihat Pertanyaan' data-id='$row[id_survey]' data-toggle='tooltip' data-placement='top'><i class='fa fa-eye'></i></a>";
+                    }
                     
                     $c = $mysqli->query("SELECT username FROM quest_user WHERE id_survey = $row[id_survey]")->fetch_object()->username;
 

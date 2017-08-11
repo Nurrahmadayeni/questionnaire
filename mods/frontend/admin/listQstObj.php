@@ -20,7 +20,8 @@
 	    <div class="panel rounded shadow panel-default">
             <div class="panel-heading">
                <?php
-                    $query = "SELECT *from survey where id_survey='$id_survey'";
+                    $query = "SELECT s.title, s.id_survey, s.start_date, s.due_date, s.mhs, s.dsn, s.pgw, so.nama_objective from survey s, survey_objective so where s.id_survey='$id_survey' and so.objective='$_GET[obj]' and s.id_survey=so.survey_id";
+                    // echo $query;
                     $result = $mysqli->query($query);
 
                     $row = $result->fetch_assoc();
@@ -72,8 +73,12 @@
                             </div>
 
                             <div class='row'>
+	                            <div class='col-md-2'><label for='title-survey' class='control-label'>Objective</label></div>
+	                            <div class='col-md-10'><label for='title-survey' class='control-label'>: $row[nama_objective]</label></div>
+                            </div>
+                            <div class='row'>
                             <div class='col-md-2'><label for='title-survey' class='control-label'>Jumlah Sampel</label></div>";
-                            $query_tot = "SELECT username FROM quest_user WHERE id_survey='$id_survey' GROUP by username";
+                            $query_tot = "SELECT username FROM quest_user WHERE id_survey='$id_survey' and unit='$_GET[obj]' GROUP by username, id_survey, unit";
                                 
                             $data_tot = $mysqli->query($query_tot);
                                 $tot = $data_tot->num_rows; 
@@ -119,7 +124,7 @@
                                 }else{
                                 	echo "<td class='text-center'>-</td>";
                                 }
-	                            echo "<td class='text-center'><a href='#diagram' data-toggle='modal' class='diagram btn btn-info btn-xs' data-id='$row[id_survey]' data-id2='$row[id_q]' data-id3='$_GET[obj]'><span data-toggle='tooltip' data-placement='top' title='Persentase' ><i class='fa fa-bar-chart'></i></<span></a></td>";
+	                            echo "<td class='text-center'><a href='#diagram' data-toggle='modal' class='diagram btn btn-info btn-xs' data-id='$row[id_survey]' data-id2='$row[id_q]' data-id3=".$_GET['obj']."><span data-toggle='tooltip' data-placement='top' title='Persentase' ><i class='fa fa-bar-chart'></i></<span></a></td>";
 	                           	
 	                            echo "
 	                                <td class='text-center' data-hide='phone,tablet'>";	                            

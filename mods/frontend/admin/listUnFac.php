@@ -10,7 +10,7 @@
     $obj = json_decode($result);
     foreach ($obj as $key => $value) {
         array_push($fakultas,$obj[$key]->code);
-        echo "<option value='".$obj[$key]->code."'>".$obj[$key]->name."</option>";
+        echo "<option value='".$obj[$key]->code.'-'.$obj[$key]->name."'>".$obj[$key]->name."</option>";
     }
 
     // faculties
@@ -24,6 +24,6 @@
 
     foreach ($obj as $key => $value) {
         array_push($fakultas,$obj[$key]->code);
-        echo "<option value='".$obj[$key]->code."'>".$obj[$key]->name."</option>";
+        echo "<option value='".$obj[$key]->code.'-'.$obj[$key]->name."'>".$obj[$key]->name."</option>";
     }
 ?>

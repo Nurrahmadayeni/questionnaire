@@ -77,7 +77,8 @@
 				    </div>
 				</div>";
 
-				$query_r = "SELECT username FROM quest_user WHERE id_survey='$_POST[srv]' and id_q='$_POST[qst]' group by id_survey, username, id_q";
+				$query_r = "SELECT username FROM quest_user WHERE id_survey='$_POST[srv]' and unit='$_POST[obj]' and id_q='$_POST[qst]' group by id_survey, username, id_q";
+				// echo $query_r;
 				$exec = $mysqli->query($query_r);
 				$total_user = $exec->num_rows;
 
@@ -85,7 +86,7 @@
 				
 				$mhs=''; $dsn=''; $pgw='';
 
-				$jlh_mhs = $mysqli->query("SELECT count(username) as jlh_user from quest_user where id_survey='$_POST[srv]' and id_q='$_POST[qst]' and level='mhs' GROUP by username")->fetch_object()->jlh_user;
+				$jlh_mhs = $mysqli->query("SELECT count(username) as jlh_user from quest_user where id_survey='$_POST[srv]' and unit='$_GET[obj]' and id_q='$_POST[qst]' and level='mhs' GROUP by username")->fetch_object()->jlh_user;
 
 				if(isset($jlh_mhs)){
 					$mhs = $jlh_mhs;
@@ -93,19 +94,37 @@
 					$mhs=0;
 				}
 				
-				$jlh_dsn = $mysqli->query("SELECT count(username) as jlh_user from quest_user where level='dsn' and id_survey='$_POST[srv]' and id_q='$_POST[qst]' GROUP by username")->fetch_object()->jlh_user;
+				$jlh_dsn = $mysqli->query("SELECT count(username) as jlh_user from quest_user where level='dsn' and id_survey='$_POST[srv]' and id_q='$_POST[qst]' and unit='$_POST[obj]' GROUP by username")->fetch_object()->jlh_user;
+
 				if(isset($jlh_dsn)){
 					$dsn = $jlh_dsn;
 				}else{
 					$dsn=0;
 				}
 
-				$jlh_pgw = $mysqli->query("SELECT count(username) as jlh_user from quest_user where level='pgw' and id_survey='$_POST[srv]' and id_q='$_POST[qst]' GROUP by username")->fetch_object()->jlh_user;
+				$jlh_pgw = $mysqli->query("SELECT count(username) as jlh_user from quest_user where level='pgw' and id_survey='$_POST[srv]' and id_q='$_POST[qst]' and unit='$_POST[obj]' GROUP by username")->fetch_object()->jlh_user;
 				if(isset($jlh_pgw)){
 					$pgw = $jlh_pgw;
 				}else{
 					$pgw=0;
 				}
+
+				// echo "pgw ".$pgw;
+				$jlh_pgw_unit = $mysqli->query("SELECT count(username) as jlh_user from quest_user where level='unit' and id_survey='$_POST[srv]' and id_q='$_POST[qst]' and unit='$_POST[obj]' GROUP by username")->fetch_object()->jlh_user;
+				if(isset($jlh_pgw_unit)){
+					$pgw+=$jlh_pgw_unit;
+				}else{
+					$pgw+=0;
+				}				
+
+				// echo "pgw ".$pgw;
+
+				$jlh_pgw_fak = $mysqli->query("SELECT count(username) as jlh_user from quest_user where level='fakultas' and id_survey='$_POST[srv]' and id_q='$_POST[qst]' and unit='$_POST[obj]' GROUP by username")->fetch_object()->jlh_user;
+				if(isset($jlh_pgw_fak)){
+					$pgw+=$jlh_pgw_fak;
+				}else{
+					$pgw+=0;
+				}				
 			echo "
                 <div class='row'>
                     <div class='col-lg-4 col-md-4 col-sm-6 col-xs-12'>
@@ -139,7 +158,7 @@
 	    			for($q=0; $q<=count($val)-1; $q++){
 	    				if($q==count($val)-1){
 	    					$profile1.= '"'.$val[$q].'"';
-	    					$q_answer = $mysqli->query("SELECT count(answer) as jlh FROM quest_user where answer='$val[$q]' and id_q='$row[id_q]' and id_survey='$_POST[srv]' GROUP BY id_q, id_survey")->fetch_object()->jlh;
+	    					$q_answer = $mysqli->query("SELECT count(answer) as jlh FROM quest_user where answer='$val[$q]' and id_q='$row[id_q]' and id_survey='$_POST[srv]' and unit='$_POST[obj]' GROUP BY id_q, id_survey, unit")->fetch_object()->jlh;
 	    					
 		    				if(isset($q_answer)){
 								$answer1.= number_format((($q_answer/$total_user)*100),2);
@@ -149,10 +168,10 @@
 	    				}else{
 	    					$profile1.= '"'.$val[$q].'"'. ", ";
 
-	    					$eu = "SELECT count(answer) as jlh FROM quest_user where answer='$val[$q]' and id_q='$row[id_q]' and id_survey='$_POST[srv]' GROUP BY id_q, id_survey";
+	    					$eu = "SELECT count(answer) as jlh FROM quest_user where answer='$val[$q]' and id_q='$row[id_q]' and id_survey='$_POST[srv]' and unit='$_POST[obj]' GROUP BY id_q, id_survey, unit";
 	    					// echo "no last ".$eu;
 
-	    					$q_answer = $mysqli->query("SELECT count(answer) as jlh FROM quest_user where answer='$val[$q]' and id_q='$row[id_q]' and id_survey='$_POST[srv]' GROUP BY id_q, id_survey")->fetch_object()->jlh;
+	    					$q_answer = $mysqli->query("SELECT count(answer) as jlh FROM quest_user where answer='$val[$q]' and id_q='$row[id_q]' and id_survey='$_POST[srv]' and unit='$_POST[obj]' GROUP BY id_q, id_survey, unit")->fetch_object()->jlh;
 	    				
 		    				if(isset($q_answer)){
 								$answer1.= number_format((($q_answer/$total_user)*100),2).", ";
@@ -225,7 +244,7 @@
 	    			$val = explode(', ', $row['answer_value']);
 	    			// echo "val ". count($val);
 
-	    			$que_s = "SELECT answer FROM quest_user where id_style_ans='2' and id_q='$row[id_q]' and id_survey='$_POST[srv]'";
+	    			$que_s = "SELECT answer FROM quest_user where id_style_ans='2' and id_q='$row[id_q]' and id_survey='$_POST[srv]' and unit='$_POST[obj]' GROUP BY id_q, id_survey, unit";
 					$style2 = $mysqli->query($que_s);
 
 					$nilai = array();
@@ -321,7 +340,7 @@
 					</script>
 					<?php
 	    		}else{
-	    			$q_u = "SELECT answer FROM quest_user where id_q='$row[id_q]' and id_style_ans!=1 and id_style_ans!=2 ";
+	    			$q_u = "SELECT answer FROM quest_user where id_q='$row[id_q]' and id_style_ans!=1 and id_style_ans!=2 and id_survey='$_POST[srv]' and unit='$_POST[obj]' GROUP BY id_q, id_survey, unit";
 	    			// echo $q_u;
 	    			$data_qu = $mysqli->query($q_u);
 

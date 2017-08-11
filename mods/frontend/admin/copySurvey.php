@@ -58,10 +58,11 @@
                     <div class="form-group">
                         <label class="control-label">Unit Kerja</label>
                         <select class="form-control select2" multiple="multiple" data-placeholder="-- Pilih Unit Kerja --" style="width: 100%;" required="" name='unit_kerja[]' id='unit'>
-                            <option value="" disabled="">-- Pilih Unit Kerja --</option>
                             <?php 
                                 include "listUnFac.php";
                                 echo "</select></div>";
+                                echo "<button type='button' class='btn btn-theme btn-md selectall'>Select All Unit Kerja</button>  ";
+                                echo "<button type='button' class='btn btn-danger btn-md deselectall'>Delect All Unit Kerja</button>";
                             }
                            
                     if($row['matakuliah']=='0'){  ?>
